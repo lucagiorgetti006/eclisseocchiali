@@ -1,0 +1,607 @@
+/* configuratore.css – la sezione "In mostra" con il visualizzatore 3D
+   (si aggiunge a stile_esercizio4.css senza modificarlo) */
+
+.sezione-configuratore {
+    padding-top: 48px;
+}
+
+/* ===== visore 3D (colonna sinistra) ===== */
+/* PASSO 3: il visore */
+.visore {
+    position: relative;
+    height: 675px;
+    background-color: #9a948a;   /* grigio caldo: si vede dietro il canvas 3D, che è trasparente */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+
+/* il canvas creato da Three.js riempie il visore (ci servirà dall'es. 2) */
+.visore canvas {
+    display: block;
+}
+
+/* PASSO 4: la scritta al centro del visore */
+.visore-segnaposto {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    color: rgba(0, 0, 0, 0.45);
+    text-align: center;
+}
+
+
+/* ===== pannello opzioni (colonna destra) ===== */
+.pannello {
+    padding: 8px 0 32px 0;
+}
+
+.sovratitolo {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 0 0 4px 0;
+}
+
+.descrizione {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.opzione {
+    border-top: solid 1px #e5e0d6;
+    padding: 16px 0;
+}
+
+.opzione-titolo {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.opzione-valore {
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.55);
+}
+
+/* PASSO 5: i campioni in fila */
+.campioni {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+/* PASSO 6: i campioni diventano cerchi e quello scelto si riconosce */
+.campione {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: solid 1px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* il campione semi-trasparente: una scacchiera sotto un velo azzurrino,
+   come nei programmi di grafica, per far capire che "si vede attraverso" */
+.campione-trasparente {
+    background-color: #ffffff;
+    background-image:
+        linear-gradient(rgba(220, 232, 240, 0.6), rgba(220, 232, 240, 0.6)),
+        conic-gradient(#c8c8c8 25%, #ffffff 0 50%, #c8c8c8 0 75%, #ffffff 0);
+    background-size: 100% 100%, 10px 10px;
+}
+
+/* anello scuro attorno al colore scelto, staccato da un bordo bianco */
+.campione.selected {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #222222;
+}
+
+
+/* PASSO 7: i bottoni dell'animazione delle stanghette */
+.animazioni {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* i bottoni Sì / No dei cavalli (pagina dettaglio.html) hanno lo stesso stile */
+.animazione,
+.scelta-cavalli,
+.scelta-vista,
+.scelta-telecamera {
+    background: #ffffff;
+    color: #222222;
+    border: solid 1px #d5d0c6;
+    border-radius: 3px;
+    padding: 11px 14px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.animazione:hover,
+.scelta-cavalli:hover,
+.scelta-vista:hover,
+.scelta-telecamera:hover {
+    border-color: #222222;
+}
+
+.animazione.selected,
+.scelta-cavalli.selected,
+.scelta-vista.selected,
+.scelta-telecamera.selected {
+    background: #222222;
+    color: #ffffff;
+    border-color: #222222;
+}
+
+
+/* ===== galleria: un riquadro 3D per ogni persona ===== */
+.sezione-galleria {
+    padding-top: 48px;
+}
+
+/* se un modello non si carica, il messaggio sta al centro del riquadro */
+.galleria-errore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+}
+
+/* il riquadro dove compare il modello: quadrato (gli angoli restano dritti come il disegno 3D).
+   Il 3D lo disegna un unico canvas sopra la pagina (.galleria-canvas), proprio in questo spazio */
+.galleria-vista {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #9a948a;   /* stesso grigio del visore: si vede finché il modello carica */
+    cursor: pointer;             /* si può cliccare (apre la pagina del modello) e trascinare (lo gira) */
+    touch-action: pan-y;         /* sul telefono si può ancora scorrere la pagina in verticale */
+}
+
+
+.galleria-nome {
+    margin: 10px 0 0 0;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* il canvas unico della galleria: copre la finestra, ma non blocca i clic (pointer-events: none)
+   e sta sotto il menu del telefono (che ha z-index 1000) */
+.galleria-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+
+/* il nome sotto ogni casella è un link alla pagina del modello */
+.galleria-nome a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.galleria-nome a:hover {
+    text-decoration: underline;
+}
+
+
+/* ===== pagina dettaglio.html ===== */
+.link-indietro,
+.naviga-modelli a {
+    color: #222222;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.link-indietro:hover,
+.naviga-modelli a:hover {
+    text-decoration: underline;
+}
+
+/* elenchi semplici (autori, materiali), senza pallini */
+.lista-info {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lista-info li {
+    padding: 2px 0;
+}
+
+/* tabelle "etichetta – valore" (file, ingombro) */
+.tabella-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 16px;
+    margin: 0;
+}
+
+.tabella-info dt {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+.tabella-info dd {
+    margin: 0;
+    text-align: right;
+}
+
+/* la prova con la telecamera: a schermo intero, sopra tutta la pagina (anche sopra il menu, che ha z-index 1000) */
+.prova-telecamera {
+    position: fixed;
+    inset: 0;
+    background: #111111;
+    z-index: 2000;
+}
+
+/* le due barre in alto: a sinistra "Indietro", a destra dimensione e foto */
+.prova-barra {
+    position: absolute;
+    top: 16px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.prova-barra-sinistra {
+    left: 16px;
+}
+
+.prova-barra-destra {
+    right: 16px;
+    align-items: flex-end;
+    width: 240px;
+}
+
+/* bottoni scuri e semi-trasparenti, leggibili sopra qualsiasi video */
+.prova-bottone {
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    border: solid 1px rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    padding: 11px 16px;
+    font: inherit;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.prova-bottone:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: #ffffff;
+}
+
+.prova-bottone-foto {
+    width: 100%;
+    background: #e06a35;            /* lo stesso arancione del bottone principale del sito */
+    border-color: #e06a35;
+    font-weight: bold;
+}
+
+.prova-bottone-foto:hover {
+    background: #c4541f;
+    border-color: #c4541f;
+}
+
+.prova-bottone-foto:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.prova-avviso-foto {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: right;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* sulla destra, sotto la barra in alto: cambia modello e colore della montatura */
+.prova-pannello-destra {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-30%);
+    z-index: 3;
+    width: 240px;
+    padding: 12px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+}
+
+.prova-etichetta {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.prova-etichetta span {
+    float: right;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* ‹ nome degli autori › */
+.prova-scorri-modelli {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.prova-freccia {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.prova-nome-modello {
+    flex: 1;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* i cerchi dei colori sopra il video: un bordo chiaro, e l'anello del colore scelto bianco */
+.prova-colori {
+    gap: 8px;
+}
+
+.prova-colori .campione {
+    width: 28px;
+    height: 28px;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.prova-colori .campione.selected {
+    box-shadow: 0 0 0 2px #000000, 0 0 0 4px #ffffff;
+}
+
+/* Cavalli dietro di te: Sì / No */
+.prova-etichetta-cavalli {
+    margin-top: 14px;
+}
+
+.prova-scelta-cavalli {
+    display: flex;
+    gap: 8px;
+}
+
+/* i canvas dei cavalli e della persona, nascosti finché i cavalli sono spenti */
+.prova-telecamera canvas[hidden] {
+    display: none;
+}
+
+/* "Originale": un bottoncino con la scritta, al posto di un cerchio */
+.campione-originale {
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 14px;
+    border: solid 1px rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.campione-originale.selected {
+    background: #ffffff;
+    color: #111111;
+}
+
+/* il riquadro che compare dopo lo scatto: anteprima e scelta (email, WhatsApp, salva, annulla) */
+.prova-scelta-invio {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: min(420px, calc(100% - 32px));
+    padding: 16px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    text-align: center;
+}
+
+.prova-scelta-invio[hidden],
+.prova-link-whatsapp[hidden] {
+    display: none;
+}
+
+.prova-scelta-invio img {
+    display: block;
+    width: 100%;
+    border-radius: 3px;
+    margin-bottom: 12px;
+}
+
+.prova-scelta-titolo {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+.prova-scelta-bottoni {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.prova-bottone-annulla {
+    background: transparent;
+}
+
+.prova-link-whatsapp {
+    display: block;
+    margin-top: 10px;
+    background: #25d366;              /* il verde di WhatsApp */
+    border-color: #25d366;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.prova-link-whatsapp:hover {
+    background: #1ebe5b;
+    border-color: #1ebe5b;
+}
+
+.prova-scelta-nota {
+    margin: 10px 0 0 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.prova-scelta-nota:empty {
+    display: none;
+}
+
+/* "Invio della foto…" / "Foto inviata": in alto al centro */
+.prova-stato-foto {
+    top: 16px;
+    bottom: auto;
+}
+
+.prova-telecamera[hidden] {
+    display: none;
+}
+
+/* video e occhiali 3D riempiono il riquadro e sono specchiati (scaleX(-1)), come uno specchio */
+.prova-telecamera video,
+.prova-telecamera canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+/* i messaggi ("Cerco il tuo viso…", errori) in basso al centro */
+.prova-messaggio {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 6px 12px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    font-size: 14px;
+    text-align: center;
+    z-index: 3;
+}
+
+.prova-messaggio:empty {
+    display: none;
+}
+
+/* il cursore della dimensione degli occhiali sul viso (nella barra in alto a destra) */
+.prova-dimensione {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.prova-dimensione span {
+    float: right;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.prova-dimensione .cursore {
+    margin-top: 8px;
+    accent-color: #ffffff;
+}
+
+.cursore {
+    display: block;
+    width: 100%;
+    margin: 0;
+    accent-color: #222222;
+    cursor: pointer;
+}
+
+/* il lampo bianco quando scatti la foto */
+.prova-telecamera.lampo-foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    z-index: 4;
+    animation: lampo-foto 0.4s ease-out forwards;
+}
+
+@keyframes lampo-foto {
+    from { opacity: 0.9; }
+    to   { opacity: 0; }
+}
+
+.nota-privacy {
+    margin: 10px 0 0 0;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.55);
+}
+
+/* Precedente / Successivo */
+.naviga-modelli {
+    display: flex;
+    justify-content: space-between;
+    border-top: solid 1px #e5e0d6;
+    padding: 16px 0;
+}
+
+
+/* ===== nota e bottone ===== */
+.nota {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.55);
+    border-top: solid 1px #e5e0d6;
+    padding-top: 16px;
+    margin: 0;
+}
+
+.btn-principale {
+    display: block;
+    width: 100%;
+    background: #e06a35;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-principale:hover {
+    background: #c4541f;
+}
+
+/* ===== media query del configuratore ===== */
+@media (max-width: 991px) {
+    /* PASSO 8: il visore su tablet e telefono */
+    .visore {
+        height: 420px;
+    }
+}

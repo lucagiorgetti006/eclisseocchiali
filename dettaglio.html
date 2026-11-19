@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- il titolo vero lo scrive dettaglio.js, con i nomi degli autori -->
+  <title>Triennale Milano – Modello</title>
+  <link rel="stylesheet" href="css/bootstrap-grid.css">
+  <link rel="stylesheet" href="css/stile_esercizio4.css">
+  <link rel="stylesheet" href="css/configuratore.css">
+
+  <!-- Three.js: dice al browser dove trovare la libreria quando scriviamo import ... from 'three' -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <!-- il JavaScript di questa pagina: legge dall'indirizzo quale modello mostrare
+       (es. dettaglio.html?modello=giuli) e riempie la pagina -->
+  <script type="module" src="js/dettaglio.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+        <div class="row pt-4 pb-5 mb-5 align-items-center">
+            <div class="col-6 col-lg-2">
+              <a href="index.html"><img class="logo" src="img/logo-triennale.svg" alt="Triennale Milano"></a>
+            </div>
+            <div class="col-lg-9 nav-wrapper d-none d-lg-block">
+                <ul class="nav-list">
+                      <li class="nav-item">
+                          <a href="index.html" class="nav-link selected"><strong>Mostre</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="#" class="nav-link">Museo del <strong>Design</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="#" class="nav-link"><strong>Teatro</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="#" class="nav-link"><strong>Visita</strong></a>
+                      </li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-1 d-flex justify-content-end align-items-center">
+              <button class="btn btn-cerca">Cerca</button>
+              <button class="btn btn-menu d-block d-lg-none">Menu</button>
+            </div>
+        </div>
+
+        <div class="mobile-nav-wrapper d-lg-none">
+                 <button class="btn btn-close mb-3">Close</button>
+                <ul class="nav-list">
+                      <li class="nav-item">
+                          <a href="index.html" class="nav-link">Home</a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="index.html" class="nav-link selected"><strong>Mostre</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="#" class="nav-link">Museo del <strong>Design</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="#" class="nav-link"><strong>Teatro</strong></a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="#" class="nav-link"><strong>Visita</strong></a>
+                      </li>
+                </ul>
+        </div>
+    </div>
+
+    <!-- ===== il modello scelto: è sempre questa stessa pagina, cambia solo il contenuto ===== -->
+    <div class="container content-wrapper sezione-configuratore">
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <a class="link-indietro" href="index.html#galleria">← Torna alla galleria</a>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12 col-lg-8">
+                <p class="sovratitolo">Galleria · Modello <span id="numero-modello"></span></p>
+                <h2 class="font-3" id="titolo-modello">Caricamento…</h2>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+
+            <!-- il visore grande -->
+            <div class="col-12 col-lg-8 mb-4 mb-lg-0">
+                <div id="visore-dettaglio" class="visore">
+                    <p class="visore-segnaposto" id="stato-caricamento">Caricamento del modello…</p>
+
+                    <!-- la prova con la telecamera: quando è accesa copre TUTTO lo schermo.
+                         Il video e gli occhiali 3D sono specchiati, come in uno specchio vero -->
+                    <div class="prova-telecamera" id="prova-telecamera" hidden>
+                        <video id="video-telecamera" playsinline muted></video>
+
+                        <!-- in alto a sinistra: torna indietro (e spegne la telecamera) -->
+                        <div class="prova-barra prova-barra-sinistra">
+                            <button class="prova-bottone" id="bottone-indietro">← Indietro</button>
+                        </div>
+
+                        <!-- in alto a destra: dimensione degli occhiali e foto -->
+                        <div class="prova-barra prova-barra-destra">
+                            <label class="prova-dimensione" for="cursore-dimensione">
+                                Dimensione <span id="valore-dimensione">100%</span>
+                                <input type="range" class="cursore" id="cursore-dimensione" min="70" max="140" step="1" value="100">
+                            </label>
+                            <button class="prova-bottone prova-bottone-foto" id="bottone-foto">Scatta la foto</button>
+                            <p class="prova-avviso-foto">Dopo lo scatto scegli tu se inviarla o salvarla.</p>
+                        </div>
+
+                        <!-- sulla destra: cambia modello e colore della montatura mentre li provi -->
+                        <div class="prova-pannello-destra">
+                            <p class="prova-etichetta">Modello <span id="prova-numero-modello"></span></p>
+                            <div class="prova-scorri-modelli">
+                                <button class="prova-bottone prova-freccia" id="prova-precedente" aria-label="Modello precedente">‹</button>
+                                <span class="prova-nome-modello" id="prova-nome-modello"></span>
+                                <button class="prova-bottone prova-freccia" id="prova-successivo" aria-label="Modello successivo">›</button>
+                            </div>
+
+                            <p class="prova-etichetta">Colore montatura <span id="prova-nome-colore">Originale</span></p>
+                            <div class="campioni prova-colori">
+                                <button class="campione-originale selected" data-nome="Originale">Originale</button>
+                                <button class="campione" data-color="#C8102E" data-nome="Rosso" style="background-color: #C8102E;" aria-label="Rosso"></button>
+                                <button class="campione" data-color="#1B2A4A" data-nome="Blu navy" style="background-color: #1B2A4A;" aria-label="Blu navy"></button>
+                                <button class="campione" data-color="#00665E" data-nome="Verde" style="background-color: #00665E;" aria-label="Verde"></button>
+                                <button class="campione" data-color="#000000" data-nome="Nero" style="background-color: #000000;" aria-label="Nero"></button>
+                                <button class="campione" data-color="#FDEEC4" data-nome="Crema" style="background-color: #FDEEC4;" aria-label="Crema"></button>
+                                <button class="campione" data-color="#FFFFFF" data-nome="Bianco" style="background-color: #FFFFFF;" aria-label="Bianco"></button>
+                                <button class="campione campione-trasparente" data-color="#DCE8F0" data-opacita="0.35" data-nome="Trasparente" aria-label="Trasparente"></button>
+                            </div>
+
+                            <p class="prova-etichetta prova-etichetta-cavalli">Cavalli dietro di te <span id="prova-valore-cavalli">No</span></p>
+                            <div class="prova-scelta-cavalli">
+                                <button class="campione-originale" data-cavalli="si">Sì</button>
+                                <button class="campione-originale selected" data-cavalli="no">No</button>
+                            </div>
+                        </div>
+
+                        <!-- dopo lo scatto: l'anteprima e la scelta di cosa farne -->
+                        <div class="prova-scelta-invio" id="scelta-invio" hidden>
+                            <img id="anteprima-foto" alt="La foto appena scattata">
+                            <p class="prova-scelta-titolo">Cosa vuoi fare con la foto?</p>
+                            <div class="prova-scelta-bottoni">
+                                <button class="prova-bottone" id="invia-email">Invia per email</button>
+                                <button class="prova-bottone" id="invia-whatsapp">Invia su WhatsApp</button>
+                                <button class="prova-bottone" id="salva-foto">Salva sul computer</button>
+                                <button class="prova-bottone prova-bottone-annulla" id="annulla-foto">Annulla</button>
+                            </div>
+                            <!-- compare dopo "Invia su WhatsApp" sul computer: apre la chat, dove incollare la foto -->
+                            <a class="prova-bottone prova-link-whatsapp" id="link-whatsapp" target="_blank" rel="noopener" hidden>Apri la chat WhatsApp</a>
+                            <p class="prova-scelta-nota" id="nota-invio"></p>
+                        </div>
+
+                        <p class="prova-messaggio prova-stato-foto" id="stato-foto"></p>
+                        <p class="prova-messaggio" id="prova-messaggio"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- le informazioni sul modello: le scrive dettaglio.js leggendo il file -->
+            <div class="col-12 col-lg-4 pannello">
+                <div class="opzione">
+                    <h3 class="opzione-titolo">Autori</h3>
+                    <ul class="lista-info" id="info-autori"></ul>
+                </div>
+
+                <div class="opzione">
+                    <h3 class="opzione-titolo">Il file</h3>
+                    <dl class="tabella-info">
+                        <dt>Nome</dt>            <dd id="info-file">–</dd>
+                        <dt>Peso</dt>            <dd id="info-peso">–</dd>
+                        <dt>Parti</dt>           <dd id="info-parti">–</dd>
+                        <dt>Vertici</dt>         <dd id="info-vertici">–</dd>
+                        <dt>Triangoli</dt>       <dd id="info-triangoli">–</dd>
+                    </dl>
+                </div>
+
+                <div class="opzione">
+                    <h3 class="opzione-titolo">Ingombro <span class="opzione-valore">misurato dal file</span></h3>
+                    <dl class="tabella-info">
+                        <dt>Larghezza</dt>       <dd id="info-larghezza">–</dd>
+                        <dt>Altezza</dt>         <dd id="info-altezza">–</dd>
+                        <dt>Profondità</dt>      <dd id="info-profondita">–</dd>
+                    </dl>
+                </div>
+
+                <!-- Prova: gli occhiali sul viso di chi guarda, con la telecamera del computer -->
+                <div class="opzione">
+                    <h3 class="opzione-titolo">Provali tu <span class="opzione-valore" id="valore-prova">Telecamera spenta</span></h3>
+                    <div class="animazioni">
+                        <button class="scelta-telecamera" id="bottone-telecamera">Accendi la telecamera</button>
+                    </div>
+                    <p class="nota-privacy">Il video resta sul tuo computer. Le foto che scatti vengono inviate al gestore del sito (per email o WhatsApp) solo se lo scegli tu.</p>
+                </div>
+
+                <!-- Visualizzazione: gli occhiali da soli oppure indossati da un cavallo -->
+                <div class="opzione">
+                    <h3 class="opzione-titolo">Visualizzazione <span class="opzione-valore" id="valore-vista">Da soli</span></h3>
+                    <div class="animazioni">
+                        <button class="scelta-vista selected" data-vista="soli" data-nome="Da soli">Da soli</button>
+                        <button class="scelta-vista" data-vista="indossati" data-nome="Indossati">Indossati da un cavallo</button>
+                    </div>
+                </div>
+
+                <!-- Cavalli: i cavalli giganti che galoppano dietro gli occhiali -->
+                <div class="opzione">
+                    <h3 class="opzione-titolo">Cavalli sullo sfondo <span class="opzione-valore" id="valore-cavalli">No</span></h3>
+                    <div class="animazioni">
+                        <button class="scelta-cavalli" data-cavalli="si" data-nome="Sì">Sì</button>
+                        <button class="scelta-cavalli selected" data-cavalli="no" data-nome="No">No</button>
+                    </div>
+                </div>
+
+                <!-- per passare al modello prima o dopo senza tornare alla galleria -->
+                <div class="naviga-modelli">
+                    <a id="link-precedente" href="#">← Precedente</a>
+                    <a id="link-successivo" href="#">Successivo →</a>
+                </div>
+
+                <p class="nota">Trascina per girare gli occhiali, usa la rotella per avvicinarti.</p>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
